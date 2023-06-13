@@ -1,22 +1,28 @@
 import React, {useState} from 'react';
-import {View, Text, Image, StyleSheet, useWindowDimensions, ScrollView} from 'react-native';
+import {View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput} from 'react-native';
 import CustomButton from '../../components/customButton/CustomButton';
 import CustomInput from '../../components/customInputs/CustomInput';
 import Logo from '../../../assets/images/Logo_2.jpeg';
 import SocialSignUpButtons from '../../components/socialSignInButtons/SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
-
+import {Controller, useForm} from 'react-hook-form';
 
 const SignInScreen = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  // const [username, setUsername] = useState('');
+  // const [password, setPassword] = useState('');
   const navigation = useNavigation();
-
   const {height} = useWindowDimensions();
-  const onSignInPressed = () => {
+
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm();
+
+  const onSignInPressed = data => {
+    console.log(data);
     // Validate User
     navigation.navigate('Home');
-
   };
   const onForgotPassword = () => {
     navigation.navigate('ForgotPassword');
@@ -34,20 +40,28 @@ const SignInScreen = () => {
           resizeMode="contain"
         />
         <CustomInput
+          name="Username"
           placeholder="Username"
-          value={username}
-          setValue={setUsername}
+          control={control}
+          rules={{require: 'Username is required'}}
         />
         <CustomInput
+          name="Password"
           placeholder="Password"
-          value={password}
-          setValue={setPassword}
+          control={control}
+          rules={{
+            require: 'Password is required',
+            minLength: {
+              value: 8,
+              message: 'Password should be minimum 8 characters long'
+            },
+          }}
           secureTextEntry
         />
 
         <CustomButton
           text="Sign In"
-          onPress={onSignInPressed}
+          onPress={handleSubmit(onSignInPressed)}
           bgColor="#4d4AA6"
         />
         <CustomButton
@@ -55,8 +69,9 @@ const SignInScreen = () => {
           onPress={onForgotPassword}
           type="TERTIARY"
           bgColor="#4d4AA6"
-          fgColor= "white"
+          fgColor="white"
         />
+
         <SocialSignUpButtons />
 
         <CustomButton
