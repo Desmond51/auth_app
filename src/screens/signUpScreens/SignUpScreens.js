@@ -6,11 +6,12 @@ import SocialSignUpButtons from '../../components/socialSignInButtons/SocialSign
 import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
 
-
-const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'**/==/=?^_{1}]/
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const SignUpScreen = () => {
-  const {control, handleSubmit} = useForm();
+  const {control, handleSubmit, watch} = useForm();
   const navigtion = useNavigation();
+
+  const pwd = watch('password');
 
   const onRegisterPressed = () => {
     navigtion.navigate('ConfirmEmail');
@@ -29,22 +30,32 @@ const SignUpScreen = () => {
       <View style={styles.root}>
         <Text style={styles.title}>Create an account </Text>
         <CustomInput
+          name="username"
           placeholder="Username"
           control={control}
           rules={{
             required: 'Username is required',
+            minLength: {
+              value: 3,
+              message: 'Your username should not be more than 3 characters'
+            },
             maxLength: {
               value: 20,
-              message: 'Your password should not be more than 20 characters',
+              message: 'Your username should not be more than 20 characters',
             },
           }}
         />
         <CustomInput
+          name="email"
           placeholder="Email"
           control={control}
-          rules={{required: 'Email is required'}}
+          rules={{
+            pattern: EMAIL_REGEX,
+            message: 'Email is incorrect',
+          }}
         />
         <CustomInput
+          name="password"
           placeholder="Password"
           control={control}
           rules={{
@@ -57,15 +68,10 @@ const SignUpScreen = () => {
           secureTextEntry
         />
         <CustomInput
+          name="repeat-password"
           placeholder="Repeat Password"
           control={control}
-          rules={{
-            required: 'Repeat your password',
-            minLegth: {
-              value: 8,
-              message: 'Password must be minimum of 8 characters',
-            },
-          }}
+          rules={{validate: value => value === pwd || 'Password do not match'}}
         />
 
         <CustomButton

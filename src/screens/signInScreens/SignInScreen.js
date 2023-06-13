@@ -1,11 +1,17 @@
 import React, {useState} from 'react';
-import {View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput} from 'react-native';
+import {
+  View,
+  Image,
+  StyleSheet,
+  useWindowDimensions,
+  ScrollView,
+} from 'react-native';
 import CustomButton from '../../components/customButton/CustomButton';
 import CustomInput from '../../components/customInputs/CustomInput';
 import Logo from '../../../assets/images/Logo_2.jpeg';
 import SocialSignUpButtons from '../../components/socialSignInButtons/SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
-import {Controller, useForm} from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 
 const SignInScreen = () => {
   // const [username, setUsername] = useState('');

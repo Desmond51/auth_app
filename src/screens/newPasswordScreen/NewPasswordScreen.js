@@ -3,11 +3,13 @@ import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import CustomButton from '../../components/customButton/CustomButton';
 import CustomInput from '../../components/customInputs/CustomInput';
 import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
 
 const NewPasswordScreen = () => {
   const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const navigation = useNavigation();
+  const {control, handleSubmit} = useForm();
 
   const onSubmitPressed = () => {
     navigation.navigate('Home');
@@ -24,12 +26,24 @@ const NewPasswordScreen = () => {
         <CustomInput placeholder="Code" value={code} setValue={setCode} />
 
         <CustomInput
+          name="password"
           placeholder="Enter new Password"
-          value={newPassword}
-          setValue={setNewPassword}
+          control={control}
+          secureTextEntry
+          rules={{
+            required: 'Password is requird',
+            minLegth: {
+              value: 3,
+              message: 'Username should be minimum 3 characters long',
+            },
+          }}
         />
 
-        <CustomButton text="Submit" onPress={onSubmitPressed} bgColor="#4d4AA6" />
+        <CustomButton
+          text="Submit"
+          onPress={handleSubmit(onSubmitPressed)}
+          bgColor="#4d4AA6"
+        />
 
         <CustomButton
           text="Back to Sign In"
